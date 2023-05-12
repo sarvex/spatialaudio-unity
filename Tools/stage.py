@@ -11,15 +11,15 @@ import oshelpers
 import shutil
 
 def copy_file(source_file, target_dir):
-    print("Copying " + source_file + " to " + target_dir)
+    print(f"Copying {source_file} to {target_dir}")
     shutil.copy(source_file, target_dir)
 
 def copy_binary(binary_name, platform, source_dir, target_dir):
-    if (platform == "Windows" or platform == "WindowsStore"):
-        copy_file(oshelpers.fixpath(source_dir, binary_name + ".dll"), target_dir)
-        copy_file(oshelpers.fixpath(source_dir, binary_name + ".pdb"), target_dir)
+    if platform in ["Windows", "WindowsStore"]:
+        copy_file(oshelpers.fixpath(source_dir, f"{binary_name}.dll"), target_dir)
+        copy_file(oshelpers.fixpath(source_dir, f"{binary_name}.pdb"), target_dir)
     else:
-        copy_file(oshelpers.fixpath(source_dir, "lib" + binary_name + ".so"), target_dir)
+        copy_file(oshelpers.fixpath(source_dir, f"lib{binary_name}.so"), target_dir)
 
 def stage_binaries_crossplatform(artifacts_path = ""):
     git_root = oshelpers.fixpath(githelpers.get_root())

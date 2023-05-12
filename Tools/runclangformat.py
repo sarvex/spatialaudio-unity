@@ -15,27 +15,28 @@ exclude_dirs = ['Build', 'tools']
 
 def file_not_excluded(file):
     path_parts = os.path.split(file)
-    for excluded in exclude_dirs:
-        if excluded in path_parts[0]:
-            return False
-    return True
+    return all(excluded not in path_parts[0] for excluded in exclude_dirs)
 
 def file_was_modified(file, edited_files):
-    for edited in edited_files:
-        if edited and edited.lower() in file.lower():
-            return True
-    return False
+    return any(
+        edited and edited.lower() in file.lower() for edited in edited_files
+    )
 
 def collect_input_files(path):
-    input_files =[] 
+    input_files =[]
     for root, dirs, files in os.walk(path):
-        for file in files:
-            if file.endswith(".cpp") or file.endswith(".h") or file.endswith(".c") or file.endswith(".hpp"):
-                input_files.append(os.path.join(root, file))
+        input_files.extend(
+            os.path.join(root, file)
+            for file in files
+            if file.endswith(".cpp")
+            or file.endswith(".h")
+            or file.endswith(".c")
+            or file.endswith(".hpp")
+        )
     return input_files
 
 def format_file(file):
-    print("Calling clang-format on '%s' " %file)
+    print(f"Calling clang-format on '{file}' ")
     subprocess.Popen([clang_format, style, '-i', file])
     return
 

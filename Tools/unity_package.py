@@ -16,8 +16,10 @@ import subprocess
 def create_unity_package(unity_path, project_dir, package_location, plugin_name, package_version):
     git_root = oshelpers.fixpath(githelpers.get_root())
     unity_project_full_path = oshelpers.fixpath(git_root, project_dir)
-    unity_package_full_path = oshelpers.fixpath(package_location, plugin_name + "." + package_version + ".unitypackage")
-    unity_package_creation_command = unity_path + " -BatchMode -Quit " + "-ProjectPath " + unity_project_full_path + " -ExportPackage Assets " + unity_package_full_path
+    unity_package_full_path = oshelpers.fixpath(
+        package_location, f"{plugin_name}.{package_version}.unitypackage"
+    )
+    unity_package_creation_command = f"{unity_path} -BatchMode -Quit -ProjectPath {unity_project_full_path} -ExportPackage Assets {unity_package_full_path}"
     result = subprocess.run(unity_package_creation_command)
     print(">>>> Unity LOG <<<<")
     editorLog = os.path.join(os.environ['userprofile'], "AppData", "Local", "Unity", "Editor", "Editor.Log")
@@ -30,7 +32,7 @@ def create_unity_package(unity_path, project_dir, package_location, plugin_name,
         print(result.stdout)
         print(result.stderr)
     else:
-        print("Package successfully generated: " + unity_package_full_path)
+        print(f"Package successfully generated: {unity_package_full_path}")
 
 def main():
     parser = argparse.ArgumentParser()

@@ -14,11 +14,11 @@ import githelpers
 def build(platform, architecture, configuration = "relwithdebinfo", clean = False):
     git_root = oshelpers.fixpath(githelpers.get_root())
     build_dir = oshelpers.fixpath(git_root, "build", platform, architecture)
-    if (platform == "Windows" or platform == "WindowsStore"):
+    if platform in ["Windows", "WindowsStore"]:
         solution = oshelpers.fixpath(git_root, constants.build_root, platform, architecture, constants.solution_file)
-        subprocess.run("msbuild -m " + solution + " /p:configuration=" + configuration)
+        subprocess.run(f"msbuild -m {solution} /p:configuration={configuration}")
     elif (platform == "Android"):
-        androidClean = constants.android_make + " clean"
+        androidClean = f"{constants.android_make} clean"
         androidArchSuffix = "-Debug" if configuration == "Debug" else ""
         subprocess.run(constants.android_make, cwd = build_dir + androidArchSuffix, check = True)
 
@@ -30,18 +30,18 @@ def main():
     parser.add_argument("--clean", help="Clean and build", action='store_true')
     args = parser.parse_args()
 
-    clean = False
-    if args.clean:
-        clean = True
-
+    clean = bool(args.clean)
     # Build as specified
     for platform in constants.build_platform_arch_map.keys():
-        if (args.platform == None or args.platform == platform.lower()):
+        if args.platform is None or args.platform == platform.lower():
             platform_architectures = constants.build_platform_arch_map[platform]
             for arch in platform_architectures:
-                if (args.arch == None or args.arch == arch.lower()):
+                if args.arch is None or args.arch == arch.lower():
                     for config in constants.valid_configurations:
-                        if (args.config == None or args.config == config.lower()):
+                        if (
+                            args.config is None
+                            or args.config == config.lower()
+                        ):
                             build(platform, arch, config, clean)
 
 if __name__ == '__main__':

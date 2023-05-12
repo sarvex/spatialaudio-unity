@@ -18,10 +18,7 @@ def get_head():
     rev_parse = subprocess.Popen([git, 'rev-parse', '--verify', 'HEAD'],
         stdout = subprocess.PIPE, stderr = subprocess.PIPE)
     rev_parse.communicate()
-    if rev_parse.returncode:
-        return empty_sha1
-    else:
-        return 'HEAD'
+    return empty_sha1 if rev_parse.returncode else 'HEAD'
 
 # Returns current commit hash
 def get_commit_hash():
@@ -47,5 +44,4 @@ def get_files_under_source_control(dir):
     diff_index = subprocess.Popen(git_args, stdout = subprocess.PIPE, cwd = dir)
     diff_index_ret = diff_index.stdout.read().strip()
     diff_index_ret = diff_index_ret.decode()
-    files = diff_index_ret.split('\n')
-    return files
+    return diff_index_ret.split('\n')

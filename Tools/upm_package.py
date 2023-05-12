@@ -33,16 +33,19 @@ def create_npm_package(project_dir, plugin_name, package_name, package_location,
         print("Package generation failed!")
         print(result.stdout)
         print(result.stderr)
+    elif local_copy:
+        npm_package_full_path = oshelpers.fixpath(
+            unity_project_full_path, f"{package_name}-{version}.tgz"
+        )
+        shutil.move(npm_package_full_path, package_location)
+        print(f"Package successfully generated: {npm_package_full_path}")
+        for file in os.listdir(package_location):
+            if file.endswith(".tgz"):
+                print(
+                    f"Package successfully moved to {oshelpers.fixpath(package_location, file)}"
+                )
     else:
-        if local_copy:
-            npm_package_full_path = oshelpers.fixpath(unity_project_full_path, package_name + "-" + version + ".tgz")
-            shutil.move(npm_package_full_path, package_location)
-            print("Package successfully generated: " + npm_package_full_path)
-            for file in os.listdir(package_location):
-                if file.endswith(".tgz"):
-                    print("Package successfully moved to " + oshelpers.fixpath(package_location, file))
-        else:
-            print("Package successfully published")
+        print("Package successfully published")
 
 def main():
     parser = argparse.ArgumentParser()

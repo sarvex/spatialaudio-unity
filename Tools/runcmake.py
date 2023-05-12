@@ -18,12 +18,64 @@ windows_arm_cmake = ["-DCMAKE_GENERATOR_PLATFORM=ARM"]
 windows_arm64_cmake = ["-DCMAKE_GENERATOR_PLATFORM=ARM64"]
 
 # Android settings
-android_armeabi_v7a_release_cmake = ["\"MinGW Makefiles\"", "-DCMAKE_BUILD_TYPE=RelWithDebInfo", "-DCMAKE_TOOLCHAIN_FILE=" + constants.android_toolchain, "-DCMAKE_MAKE_PROGRAM=" + constants.android_make, "-DANDROID_ABI=armeabi-v7a", "-DANDROID_ARM_NEON=TRUE", "-DANDROID_PLATFORM_LEVEL=android-23", "-DANDROID_TOOLCHAIN=clang"]
-android_armeabi_v7a_debug_cmake = ["\"MinGW Makefiles\"", "-DCMAKE_BUILD_TYPE=Debug", "-DCMAKE_TOOLCHAIN_FILE=" + constants.android_toolchain, "-DCMAKE_MAKE_PROGRAM=" + constants.android_make, "-DANDROID_ABI=armeabi-v7a", "-DANDROID_ARM_NEON=TRUE", "-DANDROID_PLATFORM_LEVEL=android-23", "-DANDROID_TOOLCHAIN=clang"]
-android_arm64_v8a_release_cmake = ["\"MinGW Makefiles\"", "-DCMAKE_BUILD_TYPE=RelWithDebInfo", "-DCMAKE_TOOLCHAIN_FILE=" + constants.android_toolchain, "-DCMAKE_MAKE_PROGRAM=" + constants.android_make, "-DANDROID_ABI=arm64-v8a", "-DANDROID_ARM_NEON=TRUE", "-DANDROID_PLATFORM_LEVEL=android-23", "-DANDROID_TOOLCHAIN=clang"]
-android_arm64_v8a_debug_cmake = ["\"MinGW Makefiles\"", "-DCMAKE_BUILD_TYPE=Debug", "-DCMAKE_TOOLCHAIN_FILE=" + constants.android_toolchain, "-DCMAKE_MAKE_PROGRAM=" + constants.android_make, "-DANDROID_ABI=arm64-v8a", "-DANDROID_ARM_NEON=TRUE", "-DANDROID_PLATFORM_LEVEL=android-23", "-DANDROID_TOOLCHAIN=clang"]
-android_x86_release_cmake = ["\"MinGW Makefiles\"", "-DCMAKE_BUILD_TYPE=RelWithDebInfo", "-DCMAKE_TOOLCHAIN_FILE=" + constants.android_toolchain, "-DCMAKE_MAKE_PROGRAM=" + constants.android_make, "-DANDROID_ABI=x86", "-DANDROID_PLATFORM_LEVEL=android-23", "-DANDROID_TOOLCHAIN=clang"]
-android_x86_debug_cmake = ["\"MinGW Makefiles\"", "-DCMAKE_BUILD_TYPE=Debug", "-DCMAKE_TOOLCHAIN_FILE=" + constants.android_toolchain, "-DCMAKE_MAKE_PROGRAM=" + constants.android_make, "-DANDROID_ABI=x86", "-DANDROID_PLATFORM_LEVEL=android-23", "-DANDROID_TOOLCHAIN=clang"]
+android_armeabi_v7a_release_cmake = [
+    "\"MinGW Makefiles\"",
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+    f"-DCMAKE_TOOLCHAIN_FILE={constants.android_toolchain}",
+    f"-DCMAKE_MAKE_PROGRAM={constants.android_make}",
+    "-DANDROID_ABI=armeabi-v7a",
+    "-DANDROID_ARM_NEON=TRUE",
+    "-DANDROID_PLATFORM_LEVEL=android-23",
+    "-DANDROID_TOOLCHAIN=clang",
+]
+android_armeabi_v7a_debug_cmake = [
+    "\"MinGW Makefiles\"",
+    "-DCMAKE_BUILD_TYPE=Debug",
+    f"-DCMAKE_TOOLCHAIN_FILE={constants.android_toolchain}",
+    f"-DCMAKE_MAKE_PROGRAM={constants.android_make}",
+    "-DANDROID_ABI=armeabi-v7a",
+    "-DANDROID_ARM_NEON=TRUE",
+    "-DANDROID_PLATFORM_LEVEL=android-23",
+    "-DANDROID_TOOLCHAIN=clang",
+]
+android_arm64_v8a_release_cmake = [
+    "\"MinGW Makefiles\"",
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+    f"-DCMAKE_TOOLCHAIN_FILE={constants.android_toolchain}",
+    f"-DCMAKE_MAKE_PROGRAM={constants.android_make}",
+    "-DANDROID_ABI=arm64-v8a",
+    "-DANDROID_ARM_NEON=TRUE",
+    "-DANDROID_PLATFORM_LEVEL=android-23",
+    "-DANDROID_TOOLCHAIN=clang",
+]
+android_arm64_v8a_debug_cmake = [
+    "\"MinGW Makefiles\"",
+    "-DCMAKE_BUILD_TYPE=Debug",
+    f"-DCMAKE_TOOLCHAIN_FILE={constants.android_toolchain}",
+    f"-DCMAKE_MAKE_PROGRAM={constants.android_make}",
+    "-DANDROID_ABI=arm64-v8a",
+    "-DANDROID_ARM_NEON=TRUE",
+    "-DANDROID_PLATFORM_LEVEL=android-23",
+    "-DANDROID_TOOLCHAIN=clang",
+]
+android_x86_release_cmake = [
+    "\"MinGW Makefiles\"",
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+    f"-DCMAKE_TOOLCHAIN_FILE={constants.android_toolchain}",
+    f"-DCMAKE_MAKE_PROGRAM={constants.android_make}",
+    "-DANDROID_ABI=x86",
+    "-DANDROID_PLATFORM_LEVEL=android-23",
+    "-DANDROID_TOOLCHAIN=clang",
+]
+android_x86_debug_cmake = [
+    "\"MinGW Makefiles\"",
+    "-DCMAKE_BUILD_TYPE=Debug",
+    f"-DCMAKE_TOOLCHAIN_FILE={constants.android_toolchain}",
+    f"-DCMAKE_MAKE_PROGRAM={constants.android_make}",
+    "-DANDROID_ABI=x86",
+    "-DANDROID_PLATFORM_LEVEL=android-23",
+    "-DANDROID_TOOLCHAIN=clang",
+]
 
 
 # os specific cmake command
@@ -79,7 +131,7 @@ def main():
 
     git_root = oshelpers.fixpath(githelpers.get_root())
     build_dir = oshelpers.fixpath(git_root, constants.build_root)
-    print("Creating build dirs under '%s'" %build_dir)
+    print(f"Creating build dirs under '{build_dir}'")
 
     # Install NuGet dependencies
     install_nuget_package()
@@ -87,7 +139,7 @@ def main():
     # Pass version (if specified) to CMake
     product_version_cmake = ''
     if args.version:
-        product_version_cmake = "-DPRODUCT_VERSION=" + args.version
+        product_version_cmake = f"-DPRODUCT_VERSION={args.version}"
 
     windows_win32_cmake = [generator_vs2019, "-A Win32", product_version_cmake]
     windows_x64_cmake = [generator_vs2019, "-A x64", product_version_cmake]
@@ -123,7 +175,7 @@ def create_build_folder_for_platform_architecture(build_dir, system, arch, cmake
 
     # Create the folder if it doesn't exist
     if not os.path.exists(folder):
-        print("Creating dir %s" %folder)
+        print(f"Creating dir {folder}")
         os.makedirs(folder)
 
     cmake_test_options = " -DCMAKE_TEST=TRUE"
@@ -133,8 +185,8 @@ def create_build_folder_for_platform_architecture(build_dir, system, arch, cmake
     # Run cmake with the build directory as the working dir and git root as the cmake root
     cmake_command = call_cmake() + " ".join(cmake_options) + cmake_test_options + " " + git_root
 
-    print("Executing command: %s" %cmake_command)
-    print("Executing CMake in %s" %folder)
+    print(f"Executing command: {cmake_command}")
+    print(f"Executing CMake in {folder}")
     subprocess.run(cmake_command, cwd = folder, check = True, shell = True)
 
 if __name__ == '__main__':
